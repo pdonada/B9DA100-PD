@@ -8,14 +8,22 @@ def read_bills():
         bills[-1][-1] = bills[-1][-1].strip()
     return bills
 
+def write_bills(bills):
+    bill_file = open('bills.csv', 'w')
+    for bill in bills:
+        bill_file.write(', '.join(bill) + '\n')
+
+def get_message():
+    return 'Hello, welcome to the Bill Management Company\n' + \
+            '1: View Bills\n2: Insert a Bill\n3: Reports\n4: T&Cs\n5: Exit'
+            
 def view_bills(bills):
     bills = read_bills()
     for bill in bills:
         print(bill[0], bill[1], bill[2], bill[3], bill[4], bill[5], bill[6])            
 
 def display_menu(): 
-    print('Hello, Welcome to the Bill Managment Company')
-    print(' 1. View Bills:\n 2. Insert a Bill\n 3. Reports\n 4. T&Cs\n 5. Exit\n')
+    print(get_message())
     
 def process_choice(bills):
     choice = input('Please enter an option:')
@@ -25,10 +33,7 @@ def process_choice(bills):
         elif choice == '4':
             print('The terms of the billing management company')
         choice = input('Plese enter an option:')
-
-def write_bills(bills):
-    pass
-        
+      
 def main():
     bills = read_bills()
     display_menu()
