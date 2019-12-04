@@ -21,7 +21,7 @@ class TestBillManagement(unittest.TestCase):
     def test_getmessage_bills(self):
         self.assertEqual('Hello, Welcome to the Bill Management Company\n' + \
                          '1: View Bills\n2: Insert a Bill\n3: Reports\n4: T&Cs\n5: Exit',
-            get_message())
+                         get_message())
 
 if __name__ == '__main__':
     unittest.main()    
