@@ -14,7 +14,7 @@ def write_bills(bills):
         bill_file.write(', '.join(bill) + '\n')
 
 def get_message():
-    return 'Hello, welcome to the Bill Management Company\n' + \
+    return 'Hello, Welcome to the Bill Management Company\n' + \
             '1: View Bills\n2: Insert a Bill\n3: Reports\n4: T&Cs\n5: Exit'
             
 def view_bills(bills):
