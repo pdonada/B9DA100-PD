@@ -4,8 +4,12 @@ def read_bills():
     bills = []
     bills_file = open('bills.csv')
     for line in bills_file:
-        bills.append(line.strip().split(','))
-        bills[-1][-1] = bills[-1][-1].strip()
+        words = []
+        for word in line.split(','):
+            word = word.strip()
+            if word:
+                words.append(word)
+        print(words)
     return bills
 
 def write_bills(bills):
@@ -34,13 +38,13 @@ def report_menu():
         elif choice == '3':
             print('Bill per Date')
         elif choice == '4':
-            print('Highest Bill-Debit')
+            print('Highest Bill-Credit')
         elif choice == '5':
-            print('Number of Bills per Year')
+            print('NHighest Bill-Debit')
         elif choice == '6':
-            print('Average Spent by Period')
-        elif choice == '7':
             print('Number of Bills per Year')
+        elif choice == '7':
+            print('Average Spent by Period')
         elif choice == '8':
             print('Average Time Between Bills')
         choice = input('You are on Reports Menu.\nPlease select a report(0 to return):')
