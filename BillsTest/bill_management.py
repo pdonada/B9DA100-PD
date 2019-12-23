@@ -1,16 +1,7 @@
 
-
 def read_bills():
-    bills = []
-    bills_file = open('bills.csv')
-    for line in bills_file:
-        words = []
-        for word in line.split(','):
-            word = word.strip()
-            if word:
-                words.append(word)
-        print(words)
-    return bills
+    return [[col.strip() for col in row.strip().split(',')]
+             for row in open('bills.csv', 'r') if len(row) > 1]
 
 def write_bills(bills):
     bill_file = open('bills.csv', 'w')
@@ -32,7 +23,7 @@ def report_menu():
         if choice == '0':
             print(get_report_menu())
         elif choice == '1':
-            print('Total per Year')
+            report_TotalPerYear()
         elif choice == '2':
             print('Bill per Year')
         elif choice == '3':
@@ -40,7 +31,7 @@ def report_menu():
         elif choice == '4':
             print('Highest Bill-Credit')
         elif choice == '5':
-            print('NHighest Bill-Debit')
+            print('Highest Bill-Debit')
         elif choice == '6':
             print('Number of Bills per Year')
         elif choice == '7':
@@ -48,13 +39,13 @@ def report_menu():
         elif choice == '8':
             print('Average Time Between Bills')
         choice = input('You are on Reports Menu.\nPlease select a report(0 to return):')
-           
-            
+                      
 def view_bills(bills):
     bills = read_bills()
     for bill in bills:
-        print(bill[0], bill[1], bill[2], bill[3], bill[4], bill[5], bill[6])            
-
+        #print(bill[0], bill[1], bill[2], bill[3], bill[4], bill[5], bill[6])            
+        print(*bill)
+        
 def display_menu(): 
     print(get_message())
     
@@ -72,6 +63,11 @@ def process_choice(bills):
         elif choice == '4':
             print('The terms of the billing management company')
         choice = input('Your are on Main Menu.\nPlease enter an option(0 to return):')
+
+def report_TotalPerYear():
+    bills = read_bills()
+    for bill in bills:
+        print(bill[2], bill[5], bill[6])
       
 def main():    
     bills = read_bills()
