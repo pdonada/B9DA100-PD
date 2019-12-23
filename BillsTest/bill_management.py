@@ -66,8 +66,11 @@ def process_choice(bills):
 
 def report_TotalPerYear():
     bills = read_bills()
+    sum_values = []
     for bill in bills:
-        print(bill[2], bill[5], bill[6])
+        sum_values.append(float(bill[5]))
+        total = sum(sum_values)
+    print(total)
       
 def main():    
     bills = read_bills()
