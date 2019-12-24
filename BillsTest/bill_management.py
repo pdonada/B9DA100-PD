@@ -66,11 +66,10 @@ def process_choice(bills):
 
 def report_TotalPerYear():
     bills = read_bills()
-    sum_values = []
-    for bill in bills:
-        sum_values.append(float(bill[5]))
-        total = sum(sum_values)
-    print(total)
+    df = pd.DataFrame(bills)
+    df[[5]] = df[[5]].apply(pd.to_numeric) 
+    TotYear = df.groupby([2, 6], as_index = False).sum().pivot(2, 6).rename(columns={ 2:'Year', 'credit': 'Total Credited', 'debit': 'Total Debited'})
+    return TotYear
       
 def main():    
     bills = read_bills()
