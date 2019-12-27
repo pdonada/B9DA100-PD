@@ -1,4 +1,6 @@
 import pandas as pd
+import datetime
+import numpy as np
 
 
 def read_bills():
@@ -16,7 +18,7 @@ def get_message():
 
 def get_report_menu():
     return 'Hello, Welcome to the Reports Menu\n' + \
-            '1: Total per Year\n2: Bill per Year\n3: Bill per Date\n4: Highest Bill-Credit/Debit\n5: Highest Bill-Debit\n6: Number of Bills per Year\n7: Average Spent by Period\n8: Average Time Between Bills\n9: Exit'
+            '1: Total per Year\n2: Bill per Year\n3: Bill per Date\n4: Highest Bill-Credit/Debit3\n5: Highest Bill-Debit\n6: Number of Bills per Year\n7: Average Spent by Period\n8: Average Time Between Bills\n9: Exit'
 
 def report_menu():
     print(get_report_menu())
@@ -32,14 +34,14 @@ def report_menu():
             print(report_BillsDateOrder().to_string(index=False))
         elif choice == '4':
             report_HighestBill()
-        #elif choice == '5':
-        #    print('Highest Bill-Debit')
+        elif choice == '5':
+            print('Sorry, this report is not working')
         elif choice == '6':
             report_TotalBillsPerCompany()
         elif choice == '7':
             print(report_AveragePerPeriod())
         elif choice == '8':
-            print('Average Time Between Bills')
+            report_AverageTime()
         choice = input('You are on Reports Menu.\nPlease select a report(0 to return):')
                       
 def view_bills(bills):
@@ -138,6 +140,27 @@ def report_AveragePerPeriod():
     averBill = averGroup[averGroup['Type']=='debit']
     averBill = averBill.rename(columns = {'Type': 'Type', 'dateComp': 'Period', 'Total': 'Average'})
     return averBill
+
+def report_AverageTime():
+    bills = read_bills()
+    sortedBills = sorted(bills, key=lambda caz:(caz[2], caz[3], caz[4]))
+    billsqtd = 0
+    datemin = None
+    billsdif = 0 
+    datemax = None   
+    for bill in sortedBills:
+        dateCalc = datetime.datetime.strptime( bill[2]+'-'+bill[3]+'-'+bill[4], '%Y-%m-%d')        
+        if billsqtd == 0:
+            datemin = dateCalc.date()
+            datemax = None
+        else:        
+            datemax = datemin   
+            datemin = dateCalc.date()    
+            billsdif = billsdif + (datemin - datemax).days        
+        billsqtd = billsqtd + 1           
+    caz2 = round(billsdif/(billsqtd-1), 2)
+    message = 'The average time between bills is(in days): '
+    print( str(message), caz2)
     
 def main():    
     bills = read_bills()
