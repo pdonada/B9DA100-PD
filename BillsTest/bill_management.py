@@ -29,7 +29,7 @@ def report_menu():
         elif choice == '2':
             print(report_PopularUtilCompany())
         elif choice == '3':
-            print('Bill per Date')
+            print(report_BillsDateOrder().to_string(index=False))
         elif choice == '4':
             print('Highest Bill-Credit')
         elif choice == '5':
@@ -85,6 +85,19 @@ def report_PopularUtilCompany():
     #company = sorted(company.items())
     company = sorted(company, key=company.get, reverse=True)
     return 'The most popular company was: ' + company[0]
+
+def report_BillsDateOrder():
+    bills = read_bills()
+    df = pd.DataFrame(bills)
+    dateComp = []
+    for bill in bills:
+        dateStr = bill[2]+'-' + bill[3]+'-' + bill[4]
+        dateComp.append(dateStr)  
+    df['dateComp'] = dateComp
+    df = df.rename(columns={0: 'Company', 1: 'Customer', 2: 'Year', 3: 'Month', 4: 'Day', 5: 'Total', 6: 'Type'})    
+    df1 = df.sort_values(by=['dateComp'])
+    return df1[['Company', 'Customer', 'Year', 'Month', 'Day', 'Total', 'Type']]
+    
     
 def main():    
     bills = read_bills()
