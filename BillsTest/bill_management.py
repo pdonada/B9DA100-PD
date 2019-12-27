@@ -16,7 +16,7 @@ def get_message():
 
 def get_report_menu():
     return 'Hello, Welcome to the Reports Menu\n' + \
-            '1: Total per Year\n2: Bill per Year\n3: Bill per Date\n4: Highest Bill-Credit\n5: Highest Bill-Debit\n6: Number of Bills per Year\n7: Average Spent by Period\n8: Average Time Between Bills\n9: Exit'
+            '1: Total per Year\n2: Bill per Year\n3: Bill per Date\n4: Highest Bill-Credit/Debit\n5: Highest Bill-Debit\n6: Number of Bills per Year\n7: Average Spent by Period\n8: Average Time Between Bills\n9: Exit'
 
 def report_menu():
     print(get_report_menu())
@@ -37,7 +37,7 @@ def report_menu():
         elif choice == '6':
             report_TotalBillsPerCompany()
         elif choice == '7':
-            print('Average Spent by Period')
+            print(report_AveragePerPeriod())
         elif choice == '8':
             print('Average Time Between Bills')
         choice = input('You are on Reports Menu.\nPlease select a report(0 to return):')
@@ -107,8 +107,9 @@ def report_HighestBill():
     creditMax = creditValues.max()
     debitMax = debitValues.max()
     columnsName = ['Company', 'Customer', 'Year', 'Month', 'Day', 'Total', 'Type']
-    print('Highest Credit Bill:\n', *columnsName,'\n', *creditMax)
-    print('Highest Debit Bill:\n', *columnsName,'\n',*debitMax) 
+    print(*columnsName, '\n', *creditMax,'\n', *debitMax)
+    #print('Highest Credit Bill:\n', *columnsName,'\n', *creditMax)
+    #print('Highest Debit Bill:\n', *columnsName,'\n',*debitMax) 
 
 def report_TotalBillsPerCompany():
     bills = read_bills()
@@ -122,6 +123,21 @@ def report_TotalBillsPerCompany():
     companySort = sorted(company, key=company.get, reverse=True)
     companyCount = companyDict[companySort[0]]    
     print('The most popular company was: ' + str(companySort[0]) + str(' with total of ') + str(companyCount) + str(' bills'))
+
+def report_AveragePerPeriod():
+    bills = read_bills()
+    df = pd.DataFrame(bills)
+    dateComp = []
+    for bill in bills:
+        dateStr = bill[2]+'-' + bill[3]
+        dateComp.append(dateStr)  
+    df['dateComp'] = dateComp
+    df = df.rename(columns={0: 'Company', 1: 'Customer', 2: 'Year', 3: 'Month', 4: 'Day', 5: 'Total', 6: 'Type'})    
+    df['Total'] = pd.to_numeric(df['Total'])
+    averGroup = df.groupby(['Type', 'dateComp'])['Total'].mean().reset_index()
+    averBill = averGroup[averGroup['Type']=='debit']
+    averBill = averBill.rename(columns = {'Type': 'Type', 'dateComp': 'Period', 'Total': 'Average'})
+    return averBill
     
 def main():    
     bills = read_bills()

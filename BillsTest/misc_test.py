@@ -4,19 +4,19 @@ def read_bills():
     return [[col.strip() for col in row.strip().split(',')]
              for row in open('bills.csv', 'r') if len(row) > 1]
 
-def report_TotalBillsPerCompany():
+def report_HighestBill():
     bills = read_bills()
-    company = {}
-    for i in bills:
-        if i[0] in company:
-            company[i[0]] += 1
-        else:
-            company[i[0]] = 1
-    companyDict = company
-    companySort = sorted(company, key=company.get, reverse=True)
-    companyCount = companyDict[companySort[0]]    
-    print('The most popular company was: ' + str(companySort[0]) + str(' with total of ') + str(companyCount) + str(' bills'))
+    df = pd.DataFrame(bills)
+    df[5] = pd.to_numeric(df[5])   
+    creditValues = (df[(df[6]  == 'credit')])
+    debitValues = (df[(df[6]  == 'debit')])    
+    creditMax = creditValues.max()
+    debitMax = debitValues.max()
+    columnsName = ['Company', 'Customer', 'Year', 'Month', 'Day', 'Total', 'Type']
+    print(*columnsName, '\n', *creditMax,'\n', *debitMax)
+    #print('Highest Credit Bill:\n', *columnsName,'\n', *creditMax)
+    #print('Highest Debit Bill:\n', *columnsName,'\n',*debitMax) 
 
-
-
-print(report_TotalBillsPerCompany())
+    
+    
+print(report_HighestBill())
