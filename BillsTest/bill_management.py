@@ -11,6 +11,21 @@ def write_bills(bills):
     bill_file = open('bills.csv', 'w')
     for bill in bills:
         bill_file.write(', '.join(bill) + '\n')
+        
+def insertBills(insCompany, insCustomer, insDate, insTotal, insType):
+    bills = read_bills()
+    if insType.upper() == 'C': 
+        insType = 'credit' 
+    elif insType.upper() == 'D':
+        insType = 'debit'    
+    bills.append([insCompany, insCustomer
+                  , str(datetime.datetime.strptime(insDate, '%Y-%m-%d').date().year)
+                  , str(datetime.datetime.strptime(insDate, '%Y-%m-%d').date().month)
+                  , str(datetime.datetime.strptime(insDate, '%Y-%m-%d').date().day)              
+                  , str(insTotal)
+                  , insType])
+    return write_bills(bills)
+        
 
 def get_message():
     return 'Hello, Welcome to the Bill Management Company\n' + \
@@ -61,12 +76,54 @@ def process_choice(bills):
         elif choice == '1':
             view_bills(view_bills)
         elif choice == '2':
-            write_bills(bills)
+            inputCompany  = input('Please enter the company name: ', )
+            inputCustomer = input('Please enter the customer name: ', )
+            inputDate     = inputDateTest('Please enter the bill date (yyyy-mm-dd): ', )
+            inputTotal    = inputTotalTest('Please enter the total value: ')
+            inputType     = inputTypeTest('Please enter the bill type (C=Credit or D=Debit): ' )
+            insertBills(inputCompany, inputCustomer, inputDate, inputTotal, inputType)
         elif choice == '3':
             report_menu()
         elif choice == '4':
             print('The terms of the billing management company')
         choice = input('Your are on Main Menu.\nPlease enter an option(0 to return):')
+
+#Verify date input to check acceptable format
+def inputDateTest(dateValue):
+    while True:
+        dateTest = input(dateValue)
+        try:
+            datetime.datetime.strptime(dateTest, '%Y-%m-%d')
+        except ValueError:
+            print('The date {} is invalid'.format(dateTest))
+            continue
+        break
+    return dateTest
+
+def inputTotalTest(totalValue):
+    while True:
+        val = input(totalValue)
+        try:
+            val = float(val)
+        except ValueError:
+            print('The value is invalid ',val)
+            continue
+        break
+    return val
+      
+
+def inputTypeTest(typeValue):
+    while True:
+        val = input(typeValue)
+        try:
+            if val.upper() not in ('C', 'D'):
+                print('Please, enter C for Credit or D for Debit')
+                continue
+        except ValueError:
+            print('Please, enter C for Credit or D for Debit')
+        break
+    return val
+            
 
 def report_TotalPerYear():
     bills = read_bills()
