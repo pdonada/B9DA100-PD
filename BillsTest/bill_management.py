@@ -25,9 +25,9 @@ def report_menu():
         if choice == '0':
             print(get_report_menu())
         elif choice == '1':
-            report_TotalPerYear()
+            print(report_TotalPerYear())
         elif choice == '2':
-            print('Bill per Year')
+            print(report_PopularUtilCompany())
         elif choice == '3':
             print('Bill per Date')
         elif choice == '4':
@@ -72,8 +72,20 @@ def report_TotalPerYear():
     df = df.rename(columns={0: 'Company', 1: 'Customer', 2: 'Year', 3: 'Month', 4: 'Day', 5: 'Total', 6: 'Type'})
     df['Total'] = pd.to_numeric(df['Total'])
     billTotal = df.groupby(['Year', 'Type'], as_index = False).sum().pivot('Year', 'Type').rename(columns={'credit': 'Total Credited', 'debit': 'Total Debited'})    
-    print(billTotal)
-      
+    return billTotal
+  
+def report_PopularUtilCompany():
+    bills = read_bills()
+    company = {}
+    for i in bills:
+        if i[0] in company:
+            company[i[0]] += 1
+        else:
+            company[i[0]] = 1
+    #company = sorted(company.items())
+    company = sorted(company, key=company.get, reverse=True)
+    return 'The most popular company was: ' + company[0]
+    
 def main():    
     bills = read_bills()
     display_menu()
