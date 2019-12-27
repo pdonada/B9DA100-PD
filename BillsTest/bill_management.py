@@ -31,7 +31,7 @@ def report_menu():
         elif choice == '3':
             print(report_BillsDateOrder().to_string(index=False))
         elif choice == '4':
-            print('Highest Bill-Credit')
+            report_HighestBill()
         elif choice == '5':
             print('Highest Bill-Debit')
         elif choice == '6':
@@ -98,6 +98,17 @@ def report_BillsDateOrder():
     df1 = df.sort_values(by=['dateComp'])
     return df1[['Company', 'Customer', 'Year', 'Month', 'Day', 'Total', 'Type']]
     
+def report_HighestBill():
+    bills = read_bills()
+    df = pd.DataFrame(bills)
+    df[5] = pd.to_numeric(df[5])   
+    creditValues = (df[(df[6]  == 'credit')])
+    debitValues = (df[(df[6]  == 'debit')])    
+    creditMax = creditValues.max()
+    debitMax = debitValues.max()
+    columnsName = ['Company', 'Customer', 'Year', 'Month', 'Day', 'Total', 'Type']
+    print('Highest Credit Bill:\n', *columnsName,'\n', *creditMax)
+    print('Highest Debit Bill:\n', *columnsName,'\n',*debitMax) 
     
 def main():    
     bills = read_bills()
