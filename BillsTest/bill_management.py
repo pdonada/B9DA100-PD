@@ -32,10 +32,10 @@ def report_menu():
             print(report_BillsDateOrder().to_string(index=False))
         elif choice == '4':
             report_HighestBill()
-        elif choice == '5':
-            print('Highest Bill-Debit')
+        #elif choice == '5':
+        #    print('Highest Bill-Debit')
         elif choice == '6':
-            print('Number of Bills per Year')
+            report_TotalBillsPerCompany()
         elif choice == '7':
             print('Average Spent by Period')
         elif choice == '8':
@@ -109,6 +109,19 @@ def report_HighestBill():
     columnsName = ['Company', 'Customer', 'Year', 'Month', 'Day', 'Total', 'Type']
     print('Highest Credit Bill:\n', *columnsName,'\n', *creditMax)
     print('Highest Debit Bill:\n', *columnsName,'\n',*debitMax) 
+
+def report_TotalBillsPerCompany():
+    bills = read_bills()
+    company = {}
+    for i in bills:
+        if i[0] in company:
+            company[i[0]] += 1
+        else:
+            company[i[0]] = 1
+    companyDict = company
+    companySort = sorted(company, key=company.get, reverse=True)
+    companyCount = companyDict[companySort[0]]    
+    print('The most popular company was: ' + str(companySort[0]) + str(' with total of ') + str(companyCount) + str(' bills'))
     
 def main():    
     bills = read_bills()
