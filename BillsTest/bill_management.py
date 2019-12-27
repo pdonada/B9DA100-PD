@@ -1,3 +1,5 @@
+import pandas as pd
+
 
 def read_bills():
     return [[col.strip() for col in row.strip().split(',')]
@@ -66,11 +68,11 @@ def process_choice(bills):
 
 def report_TotalPerYear():
     bills = read_bills()
-    sum_values = []
-    for bill in bills:
-        sum_values.append(float(bill[5]))
-        total = sum(sum_values)
-    print(total)
+    df = pd.DataFrame(bills)
+    df = df.rename(columns={0: 'Company', 1: 'Customer', 2: 'Year', 3: 'Month', 4: 'Day', 5: 'Total', 6: 'Type'})
+    df['Total'] = pd.to_numeric(df['Total'])
+    billTotal = df.groupby(['Year', 'Type'], as_index = False).sum().pivot('Year', 'Type').rename(columns={'credit': 'Total Credited', 'debit': 'Total Debited'})    
+    print(billTotal)
       
 def main():    
     bills = read_bills()
