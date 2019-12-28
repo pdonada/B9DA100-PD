@@ -54,7 +54,7 @@ def report_menu():
         elif choice == '4':
             report_HighestBill()
         elif choice == '5':
-            print('Please, use optioin 4')
+            print('Please, use option 4')
         elif choice == '6':
             report_TotalBillsPerCompany()
         elif choice == '7':
@@ -66,9 +66,10 @@ def report_menu():
 ###list bills                      
 def view_bills(bills):
     bills = read_bills()
-    for bill in bills:
-        #print(bill[0], bill[1], bill[2], bill[3], bill[4], bill[5], bill[6])            
-        print(*bill)
+    df = pd.DataFrame(bills)
+    df = df.rename(columns={0: 'Company', 1: 'Customer', 2: 'Year', 3: 'Month', 4: 'Day', 5: 'Total', 6: 'Type'})
+    df1 = df.sort_values(by=['Company','Customer', 'Year', 'Month'])
+    return df1.to_string(index = False)
       
 ###open main menu
 def display_menu(): 
@@ -81,7 +82,7 @@ def process_choice(bills):
         if choice == '0':
             display_menu()
         elif choice == '1':
-            view_bills(view_bills)
+            print(view_bills(view_bills))
         elif choice == '2':
             inputCompany  = input('Please enter the company name: ', )
             inputCustomer = input('Please enter the customer name: ', )
