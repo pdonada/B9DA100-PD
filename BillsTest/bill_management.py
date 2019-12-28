@@ -25,7 +25,7 @@ def insertBills(insCompany, insCustomer, insDate, insTotal, insType):
                   , str(datetime.datetime.strptime(insDate, '%Y-%m-%d').date().day)              
                   , str(insTotal)
                   , insType])
-    return write_bills(bills)
+    write_bills(bills)
         
 
 ###menu message
@@ -52,6 +52,7 @@ def report_menu():
         elif choice == '3':
             print(report_BillsDateOrder().to_string(index=False))
         elif choice == '4':
+            #HighestBillToTest = report_HighestBill()
             report_HighestBill()
         elif choice == '5':
             print('Please, use option 4')
@@ -64,7 +65,7 @@ def report_menu():
         choice = input('You are on Reports Menu.\nPlease select a report(0 to return):')
 
 ###list bills                      
-def view_bills(bills):
+def view_bills():
     bills = read_bills()
     df = pd.DataFrame(bills)
     df = df.rename(columns={0: 'Company', 1: 'Customer', 2: 'Year', 3: 'Month', 4: 'Day', 5: 'Total', 6: 'Type'})
@@ -76,13 +77,13 @@ def display_menu():
     print(get_message())
 
 ###main menu options    
-def process_choice(bills):
+def process_choice():
     choice = input('Your are on Main Menu.\nPlease enter an option(0 to return):')
     while choice != '5':
         if choice == '0':
             display_menu()
         elif choice == '1':
-            print(view_bills(view_bills))
+            print(view_bills())
         elif choice == '2':
             inputCompany  = input('Please enter the company name: ', )
             inputCustomer = input('Please enter the customer name: ', )
@@ -183,6 +184,7 @@ def report_HighestBill():
     debitMax = debitValues[debitValues['Total']==debitValues['Total'].max()]
     print(creditMax.to_string(index=False),'\n') 
     print(debitMax.to_string(index=False))
+    return creditMax.to_string(index=False)
     
 ###report item 7.Provide a report to indicate how successful the company is.  
 ###This should display the total number of bills
@@ -198,6 +200,7 @@ def report_TotalBillsPerCompany():
     companySort = sorted(company, key=company.get, reverse=True)
     companyCount = companyDict[companySort[0]]    
     print('The most popular company was: ' + str(companySort[0]) + str(' with total of ') + str(companyCount) + str(' bills'))
+    return companyCount, str(companySort[0])
 
 ###report item 8.Provide a report to calculate the average spent per 
 ###period of time (month/year) that can be entered by the user.
@@ -214,7 +217,7 @@ def report_AveragePerPeriod():
     averGroup = df.groupby(['Type', 'dateComp'])['Total'].mean().reset_index()
     averBill = averGroup[averGroup['Type']=='debit']
     averBill = averBill.rename(columns = {'Type': 'Type', 'dateComp': 'Period', 'Total': 'Average'})
-    return averBill
+    return averBill.to_string(index=False)
 
 ###report item 9.Provide a report to calculate the average time between bills.
 def report_AverageTime():
@@ -237,13 +240,13 @@ def report_AverageTime():
     caz2 = round(billsdif/(billsqtd-1), 2)
     message = 'The average time between bills is(in days): '
     print( str(message), caz2)
-
+    return caz2
     
 def main():    
-    bills = read_bills()
+    #bills = read_bills()
     display_menu()
-    process_choice(bills)
-    write_bills(bills)
+    process_choice()
+    #write_bills(bills)
        
 if __name__ == '__main__':
     main()

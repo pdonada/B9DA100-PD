@@ -1,6 +1,12 @@
 
 GitHub: https://github.com/pdonada/B9DA100-PD/tree/master/BillsTest
 
+***** 
+Obs: For tests the bill_management_test.py will return all validations ok in the first test. After that, because new lines 
+will be added, it will return erros in all tests which count lines or test the last word in the last line or are calculating
+averages/sums of values for example.
+*****
+
 How to use bill_management app:
 
 Execute the file bill_management.py. It is going to return the main menu. 
