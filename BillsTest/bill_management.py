@@ -1,17 +1,18 @@
 import pandas as pd
 import datetime
-import numpy as np
 
-
+###read the file
 def read_bills():
     return [[col.strip() for col in row.strip().split(',')]
              for row in open('bills.csv', 'r') if len(row) > 1]
 
+###write on the file
 def write_bills(bills):
     bill_file = open('bills.csv', 'w')
     for bill in bills:
         bill_file.write(', '.join(bill) + '\n')
-        
+
+###insert new rows       
 def insertBills(insCompany, insCustomer, insDate, insTotal, insType):
     bills = read_bills()
     if insType.upper() == 'C': 
@@ -27,14 +28,17 @@ def insertBills(insCompany, insCustomer, insDate, insTotal, insType):
     return write_bills(bills)
         
 
+###menu message
 def get_message():
     return 'Hello, Welcome to the Bill Management Company\n' + \
             '1: View Bills\n2: Insert a Bill\n3: Reports\n4: T&Cs\n5: Exit'
 
+###reports menu
 def get_report_menu():
     return 'Hello, Welcome to the Reports Menu\n' + \
-            '1: Total per Year\n2: Bill per Year\n3: Bill per Date\n4: Highest Bill-Credit/Debit3\n5: Highest Bill-Debit\n6: Number of Bills per Year\n7: Average Spent by Period\n8: Average Time Between Bills\n9: Exit'
+            '1: Total per Year\n2: Most Popular Company\n3: Bills Order by Date\n4: Highest Bill-Credit/Debit\n5: Highest Bill-Debit\n6: Number of Bills per Year\n7: Average Spent by Period\n8: Average Time Between Bills\n9: Exit'
 
+###reports menu options
 def report_menu():
     print(get_report_menu())
     choice = input('You are on Reports Menu.\nPlease select a report(0 to return):')
@@ -50,7 +54,7 @@ def report_menu():
         elif choice == '4':
             report_HighestBill()
         elif choice == '5':
-            print('Sorry, this report is not working')
+            print('Please, use optioin 4')
         elif choice == '6':
             report_TotalBillsPerCompany()
         elif choice == '7':
@@ -58,16 +62,19 @@ def report_menu():
         elif choice == '8':
             report_AverageTime()
         choice = input('You are on Reports Menu.\nPlease select a report(0 to return):')
-                      
+
+###list bills                      
 def view_bills(bills):
     bills = read_bills()
     for bill in bills:
         #print(bill[0], bill[1], bill[2], bill[3], bill[4], bill[5], bill[6])            
         print(*bill)
-        
+      
+###open main menu
 def display_menu(): 
     print(get_message())
-    
+
+###main menu options    
 def process_choice(bills):
     choice = input('Your are on Main Menu.\nPlease enter an option(0 to return):')
     while choice != '5':
@@ -88,7 +95,7 @@ def process_choice(bills):
             print('The terms of the billing management company')
         choice = input('Your are on Main Menu.\nPlease enter an option(0 to return):')
 
-#Verify date input to check acceptable format
+###Verify date input to check acceptable format
 def inputDateTest(dateValue):
     while True:
         dateTest = input(dateValue)
@@ -100,6 +107,7 @@ def inputDateTest(dateValue):
         break
     return dateTest
 
+###Verify total input to check acceptable format
 def inputTotalTest(totalValue):
     while True:
         val = input(totalValue)
@@ -111,7 +119,7 @@ def inputTotalTest(totalValue):
         break
     return val
       
-
+###Verify type input to check acceptable format
 def inputTypeTest(typeValue):
     while True:
         val = input(typeValue)
@@ -124,7 +132,8 @@ def inputTypeTest(typeValue):
         break
     return val
             
-
+###report Item 3.Provide a report that lists years, total credited and total debited, 
+###e.g., the output will look like the following:
 def report_TotalPerYear():
     bills = read_bills()
     df = pd.DataFrame(bills)
@@ -132,7 +141,9 @@ def report_TotalPerYear():
     df['Total'] = pd.to_numeric(df['Total'])
     billTotal = df.groupby(['Year', 'Type'], as_index = False).sum().pivot('Year', 'Type').rename(columns={'credit': 'Total Credited', 'debit': 'Total Debited'})    
     return billTotal
-  
+
+###report Item 4.Provide a report that shows the most popular utility company.  
+###The most popular utility company is the one with the most bills against that provider.  
 def report_PopularUtilCompany():
     bills = read_bills()
     company = {}
@@ -145,6 +156,7 @@ def report_PopularUtilCompany():
     company = sorted(company, key=company.get, reverse=True)
     return 'The most popular company was: ' + company[0]
 
+###report Item 5.Provide a report that shows the bills in date order.
 def report_BillsDateOrder():
     bills = read_bills()
     df = pd.DataFrame(bills)
@@ -156,20 +168,23 @@ def report_BillsDateOrder():
     df = df.rename(columns={0: 'Company', 1: 'Customer', 2: 'Year', 3: 'Month', 4: 'Day', 5: 'Total', 6: 'Type'})    
     df1 = df.sort_values(by=['dateComp'])
     return df1[['Company', 'Customer', 'Year', 'Month', 'Day', 'Total', 'Type']]
-    
+
+###report item 6.Provide another report that displays the highest amount 
+###for a bill that is a credit, and one for a debit.    
 def report_HighestBill():
     bills = read_bills()
     df = pd.DataFrame(bills)
-    df[5] = pd.to_numeric(df[5])   
-    creditValues = (df[(df[6]  == 'credit')])
-    debitValues = (df[(df[6]  == 'debit')])    
-    creditMax = creditValues.max()
-    debitMax = debitValues.max()
-    columnsName = ['Company', 'Customer', 'Year', 'Month', 'Day', 'Total', 'Type']
-    print(*columnsName, '\n', *creditMax,'\n', *debitMax)
-    #print('Highest Credit Bill:\n', *columnsName,'\n', *creditMax)
-    #print('Highest Debit Bill:\n', *columnsName,'\n',*debitMax) 
-
+    df = df.rename(columns={0: 'Company', 1: 'Customer', 2: 'Year', 3: 'Month', 4: 'Day', 5: 'Total', 6: 'Type'})    
+    df['Total'] = pd.to_numeric(df['Total'])   
+    creditValues = (df[(df['Type']  == 'credit')])
+    debitValues = (df[(df['Type']  == 'debit')])        
+    creditMax = creditValues[creditValues['Total']==creditValues['Total'].max()]
+    debitMax = debitValues[debitValues['Total']==debitValues['Total'].max()]
+    print(creditMax.to_string(index=False),'\n') 
+    print(debitMax.to_string(index=False))
+    
+###report item 7.Provide a report to indicate how successful the company is.  
+###This should display the total number of bills
 def report_TotalBillsPerCompany():
     bills = read_bills()
     company = {}
@@ -183,6 +198,8 @@ def report_TotalBillsPerCompany():
     companyCount = companyDict[companySort[0]]    
     print('The most popular company was: ' + str(companySort[0]) + str(' with total of ') + str(companyCount) + str(' bills'))
 
+###report item 8.Provide a report to calculate the average spent per 
+###period of time (month/year) that can be entered by the user.
 def report_AveragePerPeriod():
     bills = read_bills()
     df = pd.DataFrame(bills)
@@ -198,6 +215,7 @@ def report_AveragePerPeriod():
     averBill = averBill.rename(columns = {'Type': 'Type', 'dateComp': 'Period', 'Total': 'Average'})
     return averBill
 
+###report item 9.Provide a report to calculate the average time between bills.
 def report_AverageTime():
     bills = read_bills()
     sortedBills = sorted(bills, key=lambda caz:(caz[2], caz[3], caz[4]))
@@ -218,13 +236,13 @@ def report_AverageTime():
     caz2 = round(billsdif/(billsqtd-1), 2)
     message = 'The average time between bills is(in days): '
     print( str(message), caz2)
+
     
 def main():    
     bills = read_bills()
     display_menu()
     process_choice(bills)
     write_bills(bills)
-    
-    
+       
 if __name__ == '__main__':
     main()
