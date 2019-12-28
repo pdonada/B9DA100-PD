@@ -22,6 +22,11 @@ class TestBillManagement(unittest.TestCase):
         self.assertEqual('Hello, Welcome to the Bill Management Company\n' + \
                          '1: View Bills\n2: Insert a Bill\n3: Reports\n4: T&Cs\n5: Exit',
                          get_message())
-
+    
+    def test_report_HighestBill(self): 
+        bills = read_bills()
+        totalBills = report_HighestBill()     
+        self.assertEqual('Electric Ireland', totalBills[1][0])
+                
 if __name__ == '__main__':
     unittest.main()    

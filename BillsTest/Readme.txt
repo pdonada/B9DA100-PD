@@ -1,3 +1,6 @@
+
+GitHub: https://github.com/pdonada/B9DA100-PD/tree/master/BillsTest
+
 How to use bill_management app:
 
 Execute the file bill_management.py. It is going to return the main menu. 
