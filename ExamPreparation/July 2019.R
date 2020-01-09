@@ -27,4 +27,66 @@ tips$percentage.tip <- round(100 * (tips$tip / tips$total_bill), 2)
 avrg_tips <- round(mean(tips$percentage.tip), 2)
 
 # e. Which sex/day combination left the smallest mean percentage.tip?
+aggregate(tips[ , c(1, 2, 4, 6, 7, 8)],
+          list(tips$sex, tips$day),
+          mean)
+cazzo <- aggregate(tips[ , c(1, 2, 4, 6, 7, 8)],
+                   list(tips$sex, tips$day),
+                   mean)
+smal_mean <- cazzo[ which.min(cazzo$percentage.tip), ]
 
+# Create a new column called rating which converts percentage.tip to an ordered factor using the cut() function. Use bins of 0 - 10% (“Normal”), 10 - 20% (“Generous”), and 20 - 50% (“Very generous”).
+tips$rating <- cut(tips$percentage.tip, breaks = c(0, 10, 20, 50), 
+                   labels = c('Normal', 'Generous', 'Very generous'),
+                   ordered_result = TRUE)
+
+# g. The time variable records whether a table of diners sat at Dinner or Lunch. Make a two-way table of time vs. rating. How many tables at lunch are considered generous? 
+
+time_ratn <- table(tips$time, tips$rating)
+time_ratn['Lunch', 'Very generous']
+
+####################################33
+
+# Let's look at the airquality dataset again:
+data("airquality")
+
+# Simple histogram of the Temperature data:
+hist(airquality$Temp)
+
+# And now to use more options:
+hist(airquality$Temp, breaks = 10,
+     xlab = "Temperature (in Fahrenheit)",
+     main = "Histogram of daily temperature",
+     col = 'plum2',
+     labels = TRUE)
+
+# Plot temperature by month:
+boxplot(airquality$Temp ~ airquality$Month)
+
+boxplot(airquality$Temp ~ airquality$Month,
+        xlab = "Month",
+        xaxt = "n",
+        col = 2:6,
+        main = "New York Temperature by Month", ylab = "")
+axis(1, at = 1:5,
+     labels = c("May", "June", "July", "August", "September"))
+mtext("Temperature (in Fahrenheit)", side = 2, line = 2.5, las = 0)
+
+weather <- density(airquality$Temp)
+head(airquality)
+
+my_summary <- function(dataset) {
+  years_beg <- min(dataset$Month, na.rm = TRUE)
+  years_end <- max(dataset$Month, na.rm = TRUE)
+  cat('Begin and End something:', years_beg, 'and',years_end)
+  
+  wind_min <- min(dataset$Temp, na.rm = TRUE)
+  cat('\nMinimum something:', wind_min)
+  
+  oz_mean <- mean(dataset$Ozone, na.rm = TRUE)
+  cat('\nMaximum something', oz_mean)
+
+  tot_month = max(dataset$Month, na.rm = TRUE)
+  cat('\nAnother Max something', tot_month)
+    }
+my_summary(airquality)
