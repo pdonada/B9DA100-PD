@@ -34,8 +34,13 @@ mean(iris_sub$Petal.Length)
   #mean of iris_sub$Petal.Length is 5.64
 
 ###QUESTION 3
+iris_new <- read.csv(file="iris_new.data", header=F, sep=",")
+names(iris_new) <- c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width', 'Species')
 
-#
+boxplot(iris_new,  col = 2:4, las = 1, main = "Iris Data", xlab = "Species")
+
+  #Petal.Lenth: 4 outliers
+
 
 ###QUESTION 4
 library(ggplot2)
@@ -59,3 +64,14 @@ bar1 + geom_bar(stat="identity", position="dodge") +
                     name="Iris\nMeasurements",
                     breaks=c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
                     labels=c("Sepal Length", "Sepal Width", "Petal Length", "Petal Width"))
+
+###QUESTION 5
+#CREATE A NEW DATASET...
+iris_new <- read.csv(file="iris_new.data", header=F, sep=",")
+
+#CHANGING HEADERS
+iris_new <- read.csv(file="iris_new.data", header=F, sep=",")
+names(iris_new) <- c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width', 'Species')
+iris_sub <- subset(iris_new, Sepal.Length == 5.7 & Petal.Length == 4.1)
+
+
